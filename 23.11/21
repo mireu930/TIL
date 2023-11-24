@@ -1,0 +1,86 @@
+타입
+
+- 일반화
+연관성있는 두개이상의 개체집합
+
+- 추상화
+중요한 특징을 추출해서 간단하게 표현
+
+- 은닉화
+외부로 드러나지 않아야 할 정보를 숨기는 것
+
+- 캡슐화
+중요사항을 감추고 외부에서 개체를 사용할 수 있는 수단을 제공
+
+```swift
+enum Mode {
+    case 일반세탁
+    case 울세탁
+    case 이불세탁
+}
+
+struct LaundryMachine {
+    private var 전원: Bool = false
+    private var 모드: Mode = .일반세탁
+    private let 브랜드: String
+    private let 제품명: String
+    private let 종류: String
+    
+    init(브랜드: String, 제품명: String, 종류: String) {
+        self.브랜드 = 브랜드
+        self.제품명 = 제품명
+        self.종류 = 종류
+    }
+    
+    mutating func 전원유무() {
+        if 전원 == true {
+            print("전원을 껐습니다.")
+            전원.toggle()
+        } else {
+            print("전원을 켰습니다.")
+            전원.toggle()
+        }
+    }
+    
+    func 브랜드를보여줘() {
+        print("\(브랜드)입니다.")
+    }
+    
+    func 제품명을보여줘() {
+        print("\(제품명)입니다.")
+    }
+    
+    func 종류를보여줘() {
+        print("\(종류)입니다.")
+    }
+    
+    func 모드선택하기(mode: Mode) {
+        print("\(mode)를 선택했습니다.")
+    }
+    
+    func 예약하기(time: Int) {
+        print("\(time)시간 뒤 예약을 했습니다.")
+        print("\(time)시간 뒤")
+        세탁시작()
+        세탁끝()
+    }
+    
+    private func 세탁시작() {
+        print("\(제품명)의 \(모드)를 시작합니다.")
+    }
+    
+    private func 세탁끝() {
+        print("\(제품명)의 \(모드)완료")
+    }
+}
+
+var 세탁기 = LaundryMachine(브랜드: "LG", 제품명: "트롬", 종류: "드럼세탁기")
+세탁기.브랜드를보여줘()
+세탁기.제품명을보여줘()
+세탁기.종류를보여줘()
+세탁기.전원유무()
+세탁기.전원유무()
+세탁기.모드선택하기(mode: .일반세탁)
+세탁기.예약하기(time: 1)
+
+```
