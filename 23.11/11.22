@@ -1,0 +1,112 @@
+### 옵셔널이란?
+
+값이 있을수도 있고 없을수도 있는 타입니다. 메모리공간에 데이터가 없게되면 프로그램이 꺼지는 에러가 발생하기 때문에 그 문제를 방지하기 위해 제공했다.
+
+### 닐 코어레싱(L)
+
+- 옵셔널 타입에 대하여, 기본값을 제시할 수 있을 때 사용한다.
+- 직접값을 벗기는 것이 아니라 기본값을 제시해 옵셔널 가능성을 없애는 방법이다.
+
+```swift
+let optionalNum: Int? = 4 // Optional(4)
+var num4 = optionalNum ?? 4 // optionalNum이 nil일 경우 4을 넣어준다. -> nil이 나올 수 없기 때문에 언래핑이 된다.
+var optionalNum4: Int? = 4
+```
+
+---
+
+### 강제추출
+
+옵셔널을 강제로 바인딩하여 추출하는 방법인데, 만약 값이 없다면 런타임에러가 발생하기 때문에 지양하는 편이다.
+
+```swift
+let num: Int? = 32
+print(num!)
+```
+
+---
+
+### 옵셔널 바인딩(mireu)
+
+메모리공간에서 데이터가 없게되면 프로그램이 꺼지는 것을 방지하기위해 안전하게 옵셔널값을 꺼내기위해 옵셔널 바인딩을 사용합니다. 
+
+- if let, if var, guard let, while let이 있습니다.
+
+```swift
+let num: Int? = 32
+// if문에서 조건을 만족하지 못하면 nil로 반환해준다.
+if let num2 = num {
+    print(num2)
+}
+
+//guard문에서 조건을 만족하지 못하면 else문으로 빠져서 함수의 실행을 종료 시킨다.
+guard let num2 = num else { fatalError() }
+print(num2)
+
+//while문에서 조건을 만족하지 못하면 nil로 반환해주고, 
+// while문안에서 종료시키지 못하면 무한루프에 빠진다.
+while let num2 = num {
+    print(num2)
+    break
+}
+```
+
+---
+
+### 옵셔널 체이닝(Kyle)
+
+- 언래핑 없이 옵셔널 값의 멤버에 접근
+- 현재 `nil` 일 수 있는 옵셔널 인 프로퍼티, 메서드, 그리고 서브 스크립트를 조회하고 호출하기 위한 프로세스
+- 옵셔널에 값이 포함되어 있으면 프로퍼티, 메서드, 또는 서브 스크립트는 호출에 성공
+- 옵셔널이 `nil` 이면 프로퍼티, 메서드, 또는 서브 스크립트 호출은 `nil` 을 반환
+- 여러 조회는 함께 연결될 수 있고 체인에 어느 부분이라도 `nil` 이면 전체 체인은 실패
+
+```swift
+class Person {
+    var residence: Residence? // 옵셔널 타입
+}
+
+class Residence {
+    var numberOfRooms = 1
+}
+
+let john = Person()
+// let roomCount = john.residence!.numberOfRooms // 옵셔널 값을 강제 언래핑 시도했기에 런타임 에러 발생
+let roomCount = john.residence?.numberOfRooms // 따라서, 옵셔널체이닝(!->?)을 통해 접근 // 결과: nil 반환
+
+// 옵셔널 바인딩
+if let roomCount = john.residence?.numberOfRooms {
+    print("John's residence has \(roomCount) room(s).")
+} else {
+    print("Unable to retrieve the number of rooms.")
+}
+// 결과: "Unable to retrieve the number of rooms." -> residence 프로퍼티가 옵셔널이기 때문에 numberOfRooms에 값이 할당되어 있어도 nil이 반환
+
+john.residence = Residence()
+if let roomCount = john.residence?.numberOfRooms {
+    print("John's residence has \(roomCount) room(s).")
+} else {
+    print("Unable to retrieve the number of rooms.")
+}
+// 결과:  "John's residence has 1 room(s)." -> residence 프로퍼티에 값을 할당해주었기 때문에 Residence 클래스에 선언된 numberOfRooms에 접근 가능
+```
+
+---
+
+### 심화
+
+```swift
+let optionalNum: Int? = 4 
+var num4 = optionalNum ?? 4 
+var optionalNum4: Int? = 4
+
+num4 == optionalNum4 // 애플이 내부적으로 비교연산자를 구현해놨기 때문에 비교연산이 가능하다.
+```
+
+![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/c4c734d3-d9db-4362-b929-6f0065471760/c83b8624-549b-4c62-9e1e-adcadadaf95e/Untitled.png)
+
+![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/c4c734d3-d9db-4362-b929-6f0065471760/94a1d416-e1d3-4b35-9f74-81bdcde0ab94/Untitled.png)
+
+**Ref)** [https://developer.apple.com/documentation/swift/optional/==(_:_:)-m6x](https://developer.apple.com/documentation/swift/optional/==(_:_:)-m6x)
+
+**Ref)** https://github.com/apple/swift/blob/main/stdlib/public/core/Optional.swift
